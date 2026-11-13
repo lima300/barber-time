@@ -76,7 +76,7 @@ Session      — NextAuth session persistence
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/barber-time.git
+git clone https://github.com/lima300/barber-time.git
 cd barber-time
 
 # 2. Install dependencies
