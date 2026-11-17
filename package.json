@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky && prisma generate"
+    "prepare": "husky && prisma generate",
+    "db:setup": "docker compose up -d --wait && prisma migrate deploy && prisma db seed",
+    "predev": "npm run db:setup"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
