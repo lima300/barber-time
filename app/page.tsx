@@ -7,21 +7,35 @@ import { quickSearchOptions } from "./_constants/search";
 import BookingItem from "./_components/booking-item";
 import Search from "./_components/search";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { authOptions } from "./_lib/auth";
+import { getConfirmedBookings } from "./_data/get-user-bookings";
 
 export default async function Home() {
-  const barbershops = await db.barbershop.findMany({});
-  const popularBarbershops = await db.barbershop.findMany({
-    orderBy: {
-      name: "desc",
-    },
-  });
+  const [session, barbershops, popularBarbershops, confirmedBookings] =
+    await Promise.all([
+      getServerSession(authOptions),
+      db.barbershop.findMany({}),
+      db.barbershop.findMany({
+        orderBy: {
+          name: "desc",
+        },
+      }),
+      getConfirmedBookings(),
+    ]);
 
   return (
     <div>
       <Header />
       <div className="p-5">
-        <h2 className="text-xl font-bold">Olá, Otávio!</h2>
-        <p>Terça-feira 06 de Agosto</p>
+        <h2 className="text-xl font-bold">
+          Olá, {session?.user?.name ?? "bem-vindo"}!
+        </h2>
+        <p className="first-letter:uppercase">
+          {format(new Date(), "EEEE, dd 'de' MMMM", { locale: ptBR })}
+        </p>
 
         <div className="mt-6">
           <Search />
@@ -57,7 +71,18 @@ export default async function Home() {
           />
         </div>
 
-        <BookingItem />
+        {confirmedBookings.length > 0 && (
+          <>
+            <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+              Agendamentos
+            </h2>
+            <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+              {confirmedBookings.map((booking) => (
+                <BookingItem key={booking.id} booking={booking} />
+              ))}
+            </div>
+          </>
+        )}
 
         <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
           Recomendados
