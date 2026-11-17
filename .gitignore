@@ -40,3 +40,5 @@ next-env.d.ts
 
 #postgres
 .postgres-data/
+.env*
+!.env.example
