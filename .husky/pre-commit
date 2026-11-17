@@ -1,2 +1,2 @@
 . ~/.nvm/nvm.sh
-npx lint-staged
+pnpm exec lint-staged

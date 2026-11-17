@@ -70,6 +70,7 @@ Session      — NextAuth session persistence
 ### Prerequisites
 
 - Node.js 18+
+- [pnpm](https://pnpm.io/installation) 12 (`npm i -g pnpm@12`)
 - Docker (for the database)
 
 ### Installation
@@ -80,21 +81,15 @@ git clone https://github.com/lima300/barber-time.git
 cd barber-time
 
 # 2. Install dependencies
-npm install
+pnpm install
 
-# 3. Start PostgreSQL
-docker-compose up -d
-
-# 4. Configure environment
+# 3. Configure environment
 cp .env.example .env
-# Fill in DATABASE_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET
+# Fill in GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXT_AUTH_SECRET and the pgAdmin credentials
 
-# 5. Run migrations and seed
-npx prisma migrate dev
-npx prisma db seed
-
-# 6. Start the dev server
-npm run dev
+# 4. Start the dev server
+# (starts PostgreSQL, creates the database, runs migrations and seeds it automatically)
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -106,16 +101,17 @@ Open [http://localhost:3000](http://localhost:3000).
 | `DATABASE_URL`         | PostgreSQL connection string                       |
 | `GOOGLE_CLIENT_ID`     | Google OAuth app client ID                         |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth app client secret                     |
-| `NEXTAUTH_SECRET`      | Random secret for session signing                  |
+| `NEXT_AUTH_SECRET`     | Random secret for session signing                  |
 | `NEXTAUTH_URL`         | Base URL of the app (e.g. `http://localhost:3000`) |
 
 ## Scripts
 
 ```bash
-npm run dev        # Start development server with hot-reload
-npm run build      # Production build
-npm run start      # Run production build
-npm run lint       # ESLint check
+pnpm dev           # Set up the database, then start the dev server with hot-reload
+pnpm db:setup      # Start PostgreSQL, create/migrate the database and seed it if empty
+pnpm build         # Production build
+pnpm start         # Run production build
+pnpm lint          # ESLint check
 ```
 
 ## Roadmap
